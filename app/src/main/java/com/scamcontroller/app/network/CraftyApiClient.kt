@@ -192,40 +192,81 @@ class CraftyApiClient(
     }
 
     suspend fun listFiles(serverId: String, folder: String): List<ServerFileEntry> {
-        val payload = JSONObject().put("page", "files").put("folder", folder)
+        val payload = JSONObject()
+            .put("page", "files")
+            .put("path", folder)
         val data = executeJson("POST", "/servers/$serverId/files", jsonBody = payload).optJSONObject("data")
             ?: return emptyList()
         val entries = mutableListOf<ServerFileEntry>()
         val keys = data.keys()
         while (keys.hasNext()) {
             val name = keys.next()
-            if (name == "top" || name == "parent") continue
+            if (name == "root_path" || name == "top" || name == "parent") continue
             val meta = data.optJSONObject(name) ?: continue
+            val rawSize = meta.opt("size")
+            val sizeBytes = when (rawSize) {
+                is Number -> rawSize.toLong()
+                is String -> rawSize.toLongOrNull() ?: 0L
+                else -> 0L
+            }
+            val sizeLabel = when (rawSize) {
+                is String -> rawSize
+                is Number -> "${rawSize.toLong()} B"
+                else -> ""
+            }
             entries.add(
                 ServerFileEntry(
                     name = name,
                     path = meta.optString("path", if (folder.isBlank()) name else "$folder/$name"),
                     isDir = meta.optBoolean("dir", false),
-                    sizeBytes = meta.optLong("size", 0L)
+                    sizeBytes = sizeBytes,
+                    sizeLabel = sizeLabel,
+                    modified = meta.optString("modified", ""),
+                    canOpen = meta.optBoolean("can_open", true)
                 )
             )
         }
-        return entries.sortedWith(compareByDescending<ServerFileEntry> { it.isDir }.thenBy { it.name })
+        return entries.sortedWith(compareByDescending<ServerFileEntry> { it.isDir }.thenBy { it.name.lowercase() })
     }
 
     suspend fun readFile(serverId: String, filePath: String): String {
-        val payload = JSONObject().put("file", filePath)
+        val payload = JSONObject()
+            .put("page", "files")
+            .put("path", filePath)
         val json = executeJson("POST", "/servers/$serverId/files", jsonBody = payload)
-        return json.optString("data", "")
+        val dataObj = json.optJSONObject("data")
+        return when {
+            dataObj != null -> dataObj.optString("content", "")
+            else -> json.optString("data", "")
+        }
     }
 
     suspend fun writeFile(serverId: String, filePath: String, content: String) {
-        val payload = JSONObject().put("file", filePath).put("contents", content)
+        val payload = JSONObject()
+            .put("path", filePath)
+            .put("contents", content)
+            .put("overwrite", true)
         executeJson("PATCH", "/servers/$serverId/files", jsonBody = payload)
     }
 
+    suspend fun createFileOrDir(serverId: String, parentDir: String, name: String, isDir: Boolean) {
+        val payload = JSONObject()
+            .put("parent", parentDir)
+            .put("name", name)
+            .put("directory", isDir)
+        executeJson("PUT", "/servers/$serverId/files/create", jsonBody = payload)
+    }
+
+    suspend fun renameFile(serverId: String, filePath: String, newName: String) {
+        val payload = JSONObject()
+            .put("path", filePath)
+            .put("new_name", newName)
+        executeJson("PATCH", "/servers/$serverId/files/create", jsonBody = payload)
+    }
+
     suspend fun deleteFile(serverId: String, filePath: String) {
-        val payload = JSONObject().put("file", filePath)
+        val objects = JSONArray().put(JSONObject().put("filename", filePath))
+        val payload = JSONObject().put("file_system_objects", objects)
         executeJson("DELETE", "/servers/$serverId/files", jsonBody = payload)
     }
 

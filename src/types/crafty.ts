@@ -92,6 +92,7 @@ export interface ServerFileEntry {
   path: string;
   isDir: boolean;
   sizeBytes: number;
+  sizeLabel?: string;
   modified: string;
 }
 

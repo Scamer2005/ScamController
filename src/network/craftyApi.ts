@@ -297,55 +297,57 @@ export class LiveCraftyClient implements CraftyClient {
   }
 
   async listFiles(serverId: string, dirPath: string): Promise<ServerFileEntry[]> {
-    const res = await this.request<Record<string, { path?: string; dir?: boolean; size?: number }>>(
-      'POST',
-      `/servers/${serverId}/files`,
-      { body: { page: 'files', folder: dirPath } }
-    );
+    const res = await this.request<
+      Record<string, { path?: string; dir?: boolean; size?: number | string; modified?: string }>
+    >('POST', `/servers/${serverId}/files`, { body: { page: 'files', path: dirPath } });
     if (!res || typeof res !== 'object') return [];
     return Object.entries(res)
-      .filter(([key]) => key !== 'top' && key !== 'parent')
-      .map(([name, meta]) => ({
-        name,
-        path: meta.path || `${dirPath ? `${dirPath}/` : ''}${name}`,
-        isDir: Boolean(meta.dir),
-        sizeBytes: Number(meta.size || 0),
-        modified: '',
-      }))
+      .filter(([key]) => key !== 'root_path' && key !== 'top' && key !== 'parent')
+      .map(([name, meta]) => {
+        const rawSize = meta?.size;
+        const sizeBytes = typeof rawSize === 'number' ? rawSize : Number(rawSize) || 0;
+        const sizeLabel = typeof rawSize === 'string' ? rawSize : undefined;
+        return {
+          name,
+          path: meta?.path || `${dirPath ? `${dirPath}/` : ''}${name}`,
+          isDir: Boolean(meta?.dir),
+          sizeBytes,
+          sizeLabel,
+          modified: meta?.modified || '',
+        };
+      })
       .sort((a, b) => Number(b.isDir) - Number(a.isDir) || a.name.localeCompare(b.name));
   }
 
   async readFile(serverId: string, filePath: string): Promise<string> {
-    const res = await this.request<string | { content?: string }>(
-      'POST',
-      `/servers/${serverId}/files`,
-      { body: { file: filePath } }
-    );
+    const res = await this.request<string | { content?: string }>('POST', `/servers/${serverId}/files`, {
+      body: { page: 'files', path: filePath },
+    });
     if (typeof res === 'string') return res;
     return res?.content ?? '';
   }
 
   async writeFile(serverId: string, filePath: string, content: string): Promise<void> {
     await this.request('PATCH', `/servers/${serverId}/files`, {
-      body: { file: filePath, contents: content },
+      body: { path: filePath, contents: content, overwrite: true },
     });
   }
 
   async createFileOrDir(serverId: string, dirPath: string, name: string, isDir: boolean): Promise<void> {
     await this.request('PUT', `/servers/${serverId}/files/create`, {
-      body: { parent: dirPath, name, item_type: isDir ? 'directory' : 'file' },
+      body: { parent: dirPath, name, directory: isDir },
     });
   }
 
   async deleteFile(serverId: string, filePath: string): Promise<void> {
     await this.request('DELETE', `/servers/${serverId}/files`, {
-      body: { file: filePath },
+      body: { file_system_objects: [{ filename: filePath }] },
     });
   }
 
   async renameFile(serverId: string, oldPath: string, newName: string): Promise<void> {
-    await this.request('PATCH', `/servers/${serverId}/files`, {
-      body: { file: oldPath, rename: newName },
+    await this.request('PATCH', `/servers/${serverId}/files/create`, {
+      body: { path: oldPath, new_name: newName },
     });
   }
 

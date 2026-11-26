@@ -307,12 +307,12 @@ export function FileManagerPanel({ client, server }: FileManagerPanelProps) {
                       ) : (
                         <FileCode2 className="h-4 w-4 shrink-0 text-[#8B98A5]" />
                       )}
-                      <span className="truncate font-medium text-[#E6EDF3]">{entry.name}</span>
+                      <span className="truncate font-medium text-white">{entry.name}</span>
                     </button>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="font-mono text-[11px] tabular-nums text-[#8B98A5]">
-                        {entry.isDir ? 'dir' : formatBytes(entry.sizeBytes)}
+                      <span className="font-mono text-[11px] tabular-nums text-[#CBD5E1]">
+                        {entry.isDir ? 'dir' : entry.sizeLabel || formatBytes(entry.sizeBytes)}
                       </span>
                       {confirmDeletePath === entry.path ? (
                         <div className="flex items-center gap-1">

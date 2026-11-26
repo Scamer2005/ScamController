@@ -58,6 +58,7 @@ export function ConsolePanel({ client, server, onActionCompleted }: ConsolePanel
     const trimmed = rawCmd.trim();
     if (!trimmed || sending) return;
     setSending(true);
+    setAutoScroll(true);
     try {
       await client.sendStdin(server.server_id, trimmed);
       setHistory((prev) => [trimmed, ...prev.filter((c) => c !== trimmed)].slice(0, 40));
@@ -65,6 +66,11 @@ export function ConsolePanel({ client, server, onActionCompleted }: ConsolePanel
       setCommand('');
       await fetchLogs();
       onActionCompleted();
+      window.requestAnimationFrame(() => {
+        if (logContainerRef.current) {
+          logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+        }
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Command failed');
     } finally {
@@ -185,13 +191,13 @@ export function ConsolePanel({ client, server, onActionCompleted }: ConsolePanel
         ) : (
           filteredLines.map((line, index) => {
             const upper = line.toUpperCase();
-            let colorClass = 'text-[#D0D7DE]';
+            let colorClass = 'text-white';
             if (line.startsWith('>')) {
               colorClass = 'text-[#10B981] font-medium';
             } else if (upper.includes('ERROR') || upper.includes('FATAL') || upper.includes('EXCEPTION')) {
-              colorClass = 'text-[#EF4444]';
+              colorClass = 'text-[#F87171]';
             } else if (upper.includes('WARN')) {
-              colorClass = 'text-[#F59E0B]';
+              colorClass = 'text-[#FBBF24]';
             }
             return (
               <div key={`${index}-${line.slice(0, 16)}`} className={`whitespace-pre-wrap break-words py-0.5 ${colorClass}`}>

@@ -178,17 +178,30 @@ export function App() {
     NAV_GROUPS.flatMap((g) => g.items).find((t) => t.id === activeTab)?.label ?? 'Overview';
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0B0E11] text-[#E6EDF3]">
+    <div className="flex min-h-screen flex-col bg-[#0B0E11] text-white">
       {/* Clean Single-Purpose Top Bar */}
       <header className="sticky top-0 z-30 flex h-13 items-center justify-between gap-4 border-b border-[#232C36] bg-[#12171D] px-4 lg:px-5">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-sm font-bold tracking-tight text-[#E6EDF3] whitespace-nowrap shrink-0">
-            ScamController
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            <svg viewBox="0 0 64 64" fill="none" className="h-7 w-7 shrink-0" aria-hidden="true">
+              <rect width="64" height="64" rx="14" fill="#0B0E11" />
+              <rect x="8" y="10" width="48" height="44" rx="8" fill="#141A21" stroke="#2E3A48" strokeWidth="2" />
+              <rect x="13" y="16" width="11.5" height="6" rx="2.5" fill="#10B981" />
+              <rect x="26.25" y="16" width="11.5" height="6" rx="2.5" fill="#F59E0B" />
+              <rect x="39.5" y="16" width="11.5" height="6" rx="2.5" fill="#EF4444" />
+              <rect x="13" y="26" width="38" height="22" rx="4" fill="#080B0E" />
+              <path d="M18 32L22.5 35.5L18 39" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="26" y1="35.5" x2="43" y2="35.5" stroke="#E2E8F0" strokeWidth="2.6" strokeLinecap="round" />
+              <line x1="18" y1="43" x2="33" y2="43" stroke="#10B981" strokeWidth="2.6" strokeLinecap="round" />
+            </svg>
+            <span className="text-sm font-bold tracking-tight text-white whitespace-nowrap">
+              ScamController
+            </span>
+          </div>
           {activeServer && (
-            <div className="hidden md:flex items-center gap-2 text-xs text-[#8B98A5] min-w-0">
+            <div className="hidden md:flex items-center gap-2 text-xs text-[#CBD5E1] min-w-0">
               <span aria-hidden="true">/</span>
-              <span className="truncate font-medium text-[#E6EDF3]">{activeServer.server_name}</span>
+              <span className="truncate font-medium text-white">{activeServer.server_name}</span>
               <span aria-hidden="true">/</span>
               <span className="whitespace-nowrap">{currentTabLabel}</span>
             </div>

@@ -3,10 +3,41 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Clean minimal dashboard card -->
     <path
-        android:fillColor="#0B0E11"
-        android:pathData="M0,0h108v108h-108z" />
+        android:fillColor="#141A21"
+        android:pathData="M32,24 H76 A10,10 0 0 1 86,34 V74 A10,10 0 0 1 76,84 H32 A10,10 0 0 1 22,74 V34 A10,10 0 0 1 32,24 Z"
+        android:strokeColor="#2E3A48"
+        android:strokeWidth="2" />
+    <!-- 3 clean solid colored buttons: Green, Orange, Red -->
     <path
         android:fillColor="#10B981"
-        android:pathData="M34,32h40v10h-28v12h22v10h-22v12h28v10h-40z" />
+        android:pathData="M31,31 H40 A3,3 0 0 1 43,34 V36 A3,3 0 0 1 40,39 H31 A3,3 0 0 1 28,36 V34 A3,3 0 0 1 31,31 Z" />
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M49.5,31 H58.5 A3,3 0 0 1 61.5,34 V36 A3,3 0 0 1 58.5,39 H49.5 A3,3 0 0 1 46.5,36 V34 A3,3 0 0 1 49.5,31 Z" />
+    <path
+        android:fillColor="#EF4444"
+        android:pathData="M68,31 H77 A3,3 0 0 1 80,34 V36 A3,3 0 0 1 77,39 H68 A3,3 0 0 1 65,36 V34 A3,3 0 0 1 68,31 Z" />
+    <!-- Clean minimal console box -->
+    <path
+        android:fillColor="#080B0E"
+        android:pathData="M33,44 H75 A5,5 0 0 1 80,49 V72 A5,5 0 0 1 75,77 H33 A5,5 0 0 1 28,72 V49 A5,5 0 0 1 33,44 Z" />
+    <!-- Minimal white prompt + console lines -->
+    <path
+        android:pathData="M34.5,52 L40,56.5 L34.5,61"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M44.5,56.5 H69"
+        android:strokeColor="#E2E8F0"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M34.5,68 H55"
+        android:strokeColor="#10B981"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round" />
 </vector>

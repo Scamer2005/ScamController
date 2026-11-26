@@ -45,6 +45,8 @@ data class ConnectionUiState(
     val selectedServerId: String = "",
     val logs: List<String> = emptyList(),
     val files: List<ServerFileEntry> = emptyList(),
+    val filesLoading: Boolean = false,
+    val filesError: String? = null,
     val currentDir: String = "",
     val openedFilePath: String? = null,
     val openedFileContent: String = "",
@@ -294,9 +296,27 @@ class ConnectionOrchestrator(application: Application) : AndroidViewModel(applic
         val client = apiClient ?: return
         val srv = _uiState.value.activeServer ?: return
         viewModelScope.launch {
+            _uiState.update { it.copy(filesLoading = true, filesError = null) }
             runCatching { client.listFiles(srv.serverId, folder) }
-                .onSuccess { list -> _uiState.update { it.copy(files = list, currentDir = folder) } }
-                .onFailure { err -> _uiState.update { it.copy(statusBanner = err.message) } }
+                .onSuccess { list ->
+                    _uiState.update {
+                        it.copy(
+                            files = list,
+                            currentDir = folder,
+                            filesLoading = false,
+                            filesError = null
+                        )
+                    }
+                }
+                .onFailure { err ->
+                    _uiState.update {
+                        it.copy(
+                            filesLoading = false,
+                            filesError = err.message ?: "Fehler beim Laden der Dateien",
+                            statusBanner = err.message
+                        )
+                    }
+                }
         }
     }
 
@@ -304,9 +324,27 @@ class ConnectionOrchestrator(application: Application) : AndroidViewModel(applic
         val client = apiClient ?: return
         val srv = _uiState.value.activeServer ?: return
         viewModelScope.launch {
+            _uiState.update { it.copy(filesLoading = true, filesError = null) }
             runCatching { client.readFile(srv.serverId, path) }
-                .onSuccess { content -> _uiState.update { it.copy(openedFilePath = path, openedFileContent = content) } }
-                .onFailure { err -> _uiState.update { it.copy(statusBanner = err.message) } }
+                .onSuccess { content ->
+                    _uiState.update {
+                        it.copy(
+                            openedFilePath = path,
+                            openedFileContent = content,
+                            filesLoading = false,
+                            filesError = null
+                        )
+                    }
+                }
+                .onFailure { err ->
+                    _uiState.update {
+                        it.copy(
+                            filesLoading = false,
+                            filesError = err.message ?: "Datei konnte nicht gelesen werden",
+                            statusBanner = err.message
+                        )
+                    }
+                }
         }
     }
 
@@ -321,6 +359,20 @@ class ConnectionOrchestrator(application: Application) : AndroidViewModel(applic
         }
     }
 
+    fun createFileOrDir(name: String, isDir: Boolean) {
+        val client = apiClient ?: return
+        val srv = _uiState.value.activeServer ?: return
+        val parent = _uiState.value.currentDir
+        viewModelScope.launch {
+            runCatching { client.createFileOrDir(srv.serverId, parent, name.trim(), isDir) }
+                .onSuccess {
+                    _uiState.update { it.copy(statusBanner = "${if (isDir) "Folder" else "File"} created: $name") }
+                    loadDirectory(parent)
+                }
+                .onFailure { err -> _uiState.update { it.copy(filesError = err.message, statusBanner = err.message) } }
+        }
+    }
+
     fun closeOpenedFile() {
         _uiState.update { it.copy(openedFilePath = null, openedFileContent = "") }
     }
@@ -331,7 +383,7 @@ class ConnectionOrchestrator(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             runCatching { client.deleteFile(srv.serverId, path) }
                 .onSuccess { loadDirectory(_uiState.value.currentDir) }
-                .onFailure { err -> _uiState.update { it.copy(statusBanner = err.message) } }
+                .onFailure { err -> _uiState.update { it.copy(filesError = err.message, statusBanner = err.message) } }
         }
     }
 

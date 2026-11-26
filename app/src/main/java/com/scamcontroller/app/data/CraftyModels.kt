@@ -28,7 +28,10 @@ data class ServerFileEntry(
     val name: String,
     val path: String,
     val isDir: Boolean,
-    val sizeBytes: Long
+    val sizeBytes: Long = 0L,
+    val sizeLabel: String = "",
+    val modified: String = "",
+    val canOpen: Boolean = true
 )
 
 data class ServerBackup(
