@@ -1,0 +1,35 @@
+name: Android APK Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code herunterladen
+        uses: actions/checkout@v4
+
+      - name: JDK 17 einrichten
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle einrichten & cachen
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Ausführungsrechte für gradlew setzen
+        run: chmod +x gradlew
+
+      - name: Debug APK kompilieren
+        run: ./gradlew assembleDebug
+
+      - name: Fertige APK bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
