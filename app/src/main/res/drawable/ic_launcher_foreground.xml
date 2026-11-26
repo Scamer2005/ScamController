@@ -3,41 +3,41 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Clean minimal dashboard card -->
+    <!-- Clean minimal dashboard card scaled cleanly inside Android adaptive icon 66dp safe zone -->
     <path
         android:fillColor="#141A21"
-        android:pathData="M32,24 H76 A10,10 0 0 1 86,34 V74 A10,10 0 0 1 76,84 H32 A10,10 0 0 1 22,74 V34 A10,10 0 0 1 32,24 Z"
+        android:pathData="M39,33 H69 A7,7 0 0 1 76,40 V68 A7,7 0 0 1 69,75 H39 A7,7 0 0 1 32,68 V40 A7,7 0 0 1 39,33 Z"
         android:strokeColor="#2E3A48"
-        android:strokeWidth="2" />
+        android:strokeWidth="1.8" />
     <!-- 3 clean solid colored buttons: Green, Orange, Red -->
     <path
         android:fillColor="#10B981"
-        android:pathData="M31,31 H40 A3,3 0 0 1 43,34 V36 A3,3 0 0 1 40,39 H31 A3,3 0 0 1 28,36 V34 A3,3 0 0 1 31,31 Z" />
+        android:pathData="M38.5,38 H44.5 A2,2 0 0 1 46.5,40 V41.5 A2,2 0 0 1 44.5,43.5 H38.5 A2,2 0 0 1 36.5,41.5 V40 A2,2 0 0 1 38.5,38 Z" />
     <path
         android:fillColor="#F59E0B"
-        android:pathData="M49.5,31 H58.5 A3,3 0 0 1 61.5,34 V36 A3,3 0 0 1 58.5,39 H49.5 A3,3 0 0 1 46.5,36 V34 A3,3 0 0 1 49.5,31 Z" />
+        android:pathData="M51,38 H57 A2,2 0 0 1 59,40 V41.5 A2,2 0 0 1 57,43.5 H51 A2,2 0 0 1 49,41.5 V40 A2,2 0 0 1 51,38 Z" />
     <path
         android:fillColor="#EF4444"
-        android:pathData="M68,31 H77 A3,3 0 0 1 80,34 V36 A3,3 0 0 1 77,39 H68 A3,3 0 0 1 65,36 V34 A3,3 0 0 1 68,31 Z" />
+        android:pathData="M63.5,38 H69.5 A2,2 0 0 1 71.5,40 V41.5 A2,2 0 0 1 69.5,43.5 H63.5 A2,2 0 0 1 61.5,41.5 V40 A2,2 0 0 1 63.5,38 Z" />
     <!-- Clean minimal console box -->
     <path
         android:fillColor="#080B0E"
-        android:pathData="M33,44 H75 A5,5 0 0 1 80,49 V72 A5,5 0 0 1 75,77 H33 A5,5 0 0 1 28,72 V49 A5,5 0 0 1 33,44 Z" />
+        android:pathData="M40.5,47 H67.5 A4,4 0 0 1 71.5,51 V66 A4,4 0 0 1 67.5,70 H40.5 A4,4 0 0 1 36.5,66 V51 A4,4 0 0 1 40.5,47 Z" />
     <!-- Minimal white prompt + console lines -->
     <path
-        android:pathData="M34.5,52 L40,56.5 L34.5,61"
+        android:pathData="M41,52.5 L45,55.5 L41,58.5"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="3.2"
+        android:strokeWidth="2.4"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M44.5,56.5 H69"
+        android:pathData="M48.5,55.5 H65"
         android:strokeColor="#E2E8F0"
-        android:strokeWidth="3.2"
+        android:strokeWidth="2.4"
         android:strokeLineCap="round" />
     <path
-        android:pathData="M34.5,68 H55"
+        android:pathData="M41,63.5 H56"
         android:strokeColor="#10B981"
-        android:strokeWidth="3.2"
+        android:strokeWidth="2.4"
         android:strokeLineCap="round" />
 </vector>
