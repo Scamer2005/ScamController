@@ -1,5 +1,7 @@
 # ScamController (Web + Android Client)
 
+**Entirely coded by AI (gemini)! Not my work.**
+
 A full-featured Crafty Controller v4 replacement built for both **Web (React + Express)** and **Native Android (Kotlin + Jetpack Compose)**.
 
 ## Features
