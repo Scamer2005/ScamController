@@ -1,0 +1,5 @@
+{
+  "name": "ScamController",
+  "description": "Full-featured Crafty Controller v4 client with LAN-first reachability probing, Tailscale VPN fallback, live console, file manager, backups, schedules, player controls, and user management.",
+  "requestFramePermissions": []
+}
